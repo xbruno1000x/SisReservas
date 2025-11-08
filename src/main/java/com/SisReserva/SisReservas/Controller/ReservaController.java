@@ -39,6 +39,12 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
+    @GetMapping("/profissional/{profissionalId}")
+    public ResponseEntity<List<Reserva>> buscarPorProfissional(@PathVariable Long profissionalId) {
+        List<Reserva> reservas = reservaService.buscarPorProfissional(profissionalId);
+        return ResponseEntity.ok(reservas);
+    }
+
     @GetMapping("/data/{data}")
     public ResponseEntity<List<Reserva>> buscarPorData(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {

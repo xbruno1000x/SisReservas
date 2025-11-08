@@ -3,8 +3,10 @@ package com.SisReservas.service;
 import com.SisReservas.model.Reserva;
 import com.SisReservas.model.Reserva.StatusReserva;
 import com.SisReservas.model.Cliente;
+import com.SisReservas.model.Profissional;
 import com.SisReservas.repository.ReservaRepository;
 import com.SisReservas.repository.ClienteRepository;
+import com.SisReservas.repository.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,9 @@ public class ReservaService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
+
     public List<Reserva> listarTodas() {
         return reservaRepository.findAll();
     }
@@ -33,6 +38,10 @@ public class ReservaService {
 
     public List<Reserva> buscarPorCliente(Long clienteId) {
         return reservaRepository.findByClienteId(clienteId);
+    }
+
+    public List<Reserva> buscarPorProfissional(Long profissionalId) {
+        return reservaRepository.findByProfissionalId(profissionalId);
     }
 
     public List<Reserva> buscarPorData(LocalDate data) {
@@ -48,7 +57,6 @@ public class ReservaService {
     }
 
     public Reserva criar(Reserva reserva) {
-        // Validar se o cliente existe
         if (reserva.getCliente() == null || reserva.getCliente().getId() == null) {
             throw new IllegalArgumentException("Cliente é obrigatório para criar uma reserva");
         }
@@ -57,8 +65,20 @@ public class ReservaService {
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado com ID: " + reserva.getCliente().getId()));
 
         reserva.setCliente(cliente);
+
+        if (reserva.getProfissional() == null || reserva.getProfissional().getId() == null) {
+            throw new IllegalArgumentException("Profissional é obrigatório para criar uma reserva");
+        }
+
+        Profissional profissional = profissionalRepository.findById(reserva.getProfissional().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Profissional não encontrado com ID: " + reserva.getProfissional().getId()));
+
+        if (!profissional.getAtivo()) {
+            throw new IllegalArgumentException("Profissional não está ativo");
+        }
+
+        reserva.setProfissional(profissional);
         
-        // Validação básica de data (não pode ser no passado)
         if (reserva.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Não é possível criar reserva para data passada");
         }
@@ -72,6 +92,17 @@ public class ReservaService {
                     reserva.setData(reservaAtualizada.getData());
                     reserva.setHora(reservaAtualizada.getHora());
                     reserva.setObservacoes(reservaAtualizada.getObservacoes());
+                    
+                    if (reservaAtualizada.getProfissional() != null && reservaAtualizada.getProfissional().getId() != null) {
+                        Profissional profissional = profissionalRepository.findById(reservaAtualizada.getProfissional().getId())
+                                .orElseThrow(() -> new IllegalArgumentException("Profissional não encontrado"));
+                        
+                        if (!profissional.getAtivo()) {
+                            throw new IllegalArgumentException("Profissional não está ativo");
+                        }
+                        
+                        reserva.setProfissional(profissional);
+                    }
                     
                     if (reservaAtualizada.getStatus() != null) {
                         reserva.setStatus(reservaAtualizada.getStatus());

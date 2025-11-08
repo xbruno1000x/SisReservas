@@ -15,9 +15,14 @@ public class Reserva {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = false, foreignKey = @ForeignKey(name = "fk_reserva_cliente"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "profissional_id", nullable = false, foreignKey = @ForeignKey(name = "fk_reserva_profissional"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "reservas"})
+    private Profissional profissional;
 
     @Column(nullable = false)
     private LocalDate data;
@@ -61,8 +66,9 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(Cliente cliente, LocalDate data, LocalTime hora) {
+    public Reserva(Cliente cliente, Profissional profissional, LocalDate data, LocalTime hora) {
         this.cliente = cliente;
+        this.profissional = profissional;
         this.data = data;
         this.hora = hora;
     }
@@ -82,6 +88,14 @@ public class Reserva {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Profissional getProfissional() {
+        return profissional;
+    }
+
+    public void setProfissional(Profissional profissional) {
+        this.profissional = profissional;
     }
 
     public LocalDate getData() {
@@ -137,6 +151,7 @@ public class Reserva {
         return "Reserva{" +
                 "id=" + id +
                 ", clienteId=" + (cliente != null ? cliente.getId() : null) +
+                ", profissionalId=" + (profissional != null ? profissional.getId() : null) +
                 ", data=" + data +
                 ", hora=" + hora +
                 ", status=" + status +

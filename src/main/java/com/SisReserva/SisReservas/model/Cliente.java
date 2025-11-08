@@ -2,6 +2,8 @@ package com.SisReservas.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -19,6 +21,9 @@ public class Cliente {
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reserva> reservas = new ArrayList<>();
 
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime criadoEm;
