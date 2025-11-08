@@ -119,46 +119,6 @@ Ou se estiver usando VS Code com as tasks configuradas:
 - `CANCELADA` - Reserva cancelada
 - `CONCLUIDA` - Serviço realizado
 
-## 🧪 Testando a API
-
-### Com Postman
-Importe a collection localizada em `/Postman/SisReservas-API.postman_collection.json`
-
-A collection inclui:
-- 17 requisições pré-configuradas
-- Variável de ambiente `{{base_url}}`
-- Exemplos de todos os endpoints
-
-### Com cURL
-
-#### Criar um cliente
-```bash
-curl -X POST http://localhost:8080/api/clientes \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "Maria Santos",
-    "telefone": "(11) 91234-5678",
-    "email": "maria.santos@email.com"
-  }'
-```
-
-#### Criar uma reserva
-```bash
-curl -X POST http://localhost:8080/api/reservas \
-  -H "Content-Type: application/json" \
-  -d '{
-    "clienteId": 1,
-    "data": "2025-11-15",
-    "hora": "14:30:00",
-    "observacoes": "Primeira reserva"
-  }'
-```
-
-#### Listar todas as reservas
-```bash
-curl http://localhost:8080/api/reservas
-```
-
 ## 🗄️ Banco de Dados
 
 O projeto utiliza H2 Database em memória com dados pré-populados:
@@ -228,8 +188,6 @@ SisReservas/
 ├── src/main/resources/
 │   ├── application.properties
 │   └── data.sql           # Dados iniciais
-├── Postman/
-│   └── SisReservas-API.postman_collection.json
 ├── pom.xml
 └── README.md
 ```
