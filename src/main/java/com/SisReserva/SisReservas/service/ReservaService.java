@@ -55,6 +55,30 @@ public class ReservaService {
     public List<Reserva> buscarPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
         return reservaRepository.findByDataBetween(dataInicio, dataFim);
     }
+    
+    public List<Reserva> buscarComFiltros(LocalDate data, Long clienteId, Long profissionalId) {
+        List<Reserva> reservas = reservaRepository.findAll();
+        
+        if (data != null) {
+            reservas = reservas.stream()
+                    .filter(r -> r.getData().equals(data))
+                    .toList();
+        }
+        
+        if (clienteId != null) {
+            reservas = reservas.stream()
+                    .filter(r -> r.getCliente().getId().equals(clienteId))
+                    .toList();
+        }
+        
+        if (profissionalId != null) {
+            reservas = reservas.stream()
+                    .filter(r -> r.getProfissional().getId().equals(profissionalId))
+                    .toList();
+        }
+        
+        return reservas;
+    }
 
     public Reserva criar(Reserva reserva) {
         if (reserva.getCliente() == null || reserva.getCliente().getId() == null) {

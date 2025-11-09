@@ -27,6 +27,13 @@ public class ClienteService {
     public Optional<Cliente> buscarPorEmail(String email) {
         return clienteRepository.findByEmail(email);
     }
+    
+    public List<Cliente> buscarPorFiltro(String filtro) {
+        if (filtro == null || filtro.trim().isEmpty()) {
+            return clienteRepository.findAll();
+        }
+        return clienteRepository.buscarPorFiltro(filtro.trim());
+    }
 
     public Cliente salvar(Cliente cliente) {
         // Validação: verificar se email já existe

@@ -22,6 +22,12 @@ public class ClienteController {
         List<Cliente> clientes = clienteService.listarTodos();
         return ResponseEntity.ok(clientes);
     }
+    
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Cliente>> buscarPorFiltro(@RequestParam(required = false) String filtro) {
+        List<Cliente> clientes = clienteService.buscarPorFiltro(filtro);
+        return ResponseEntity.ok(clientes);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarPorId(@PathVariable Long id) {

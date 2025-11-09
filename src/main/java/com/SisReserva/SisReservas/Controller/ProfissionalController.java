@@ -22,6 +22,14 @@ public class ProfissionalController {
         List<Profissional> profissionais = profissionalService.listarTodos();
         return ResponseEntity.ok(profissionais);
     }
+    
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Profissional>> buscarComFiltros(
+            @RequestParam(required = false) String especialidade,
+            @RequestParam(required = false) String filtro) {
+        List<Profissional> profissionais = profissionalService.buscarComFiltros(especialidade, filtro);
+        return ResponseEntity.ok(profissionais);
+    }
 
     @GetMapping("/ativos")
     public ResponseEntity<List<Profissional>> listarAtivos() {

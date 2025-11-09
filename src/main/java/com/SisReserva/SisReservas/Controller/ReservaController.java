@@ -25,6 +25,15 @@ public class ReservaController {
         List<Reserva> reservas = reservaService.listarTodas();
         return ResponseEntity.ok(reservas);
     }
+    
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Reserva>> buscarComFiltros(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
+            @RequestParam(required = false) Long clienteId,
+            @RequestParam(required = false) Long profissionalId) {
+        List<Reserva> reservas = reservaService.buscarComFiltros(data, clienteId, profissionalId);
+        return ResponseEntity.ok(reservas);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Reserva> buscarPorId(@PathVariable Long id) {

@@ -35,6 +35,23 @@ public class ProfissionalService {
     public List<Profissional> buscarPorEspecialidade(String especialidade) {
         return profissionalRepository.findByEspecialidade(especialidade);
     }
+    
+    public List<Profissional> buscarPorFiltro(String filtro) {
+        if (filtro == null || filtro.trim().isEmpty()) {
+            return profissionalRepository.findAll();
+        }
+        return profissionalRepository.buscarPorFiltro(filtro.trim());
+    }
+    
+    public List<Profissional> buscarComFiltros(String especialidade, String filtro) {
+        if ((especialidade == null || especialidade.trim().isEmpty()) && 
+            (filtro == null || filtro.trim().isEmpty())) {
+            return profissionalRepository.findAll();
+        }
+        String esp = (especialidade != null && !especialidade.trim().isEmpty()) ? especialidade.trim() : null;
+        String flt = (filtro != null && !filtro.trim().isEmpty()) ? filtro.trim() : null;
+        return profissionalRepository.buscarComFiltros(esp, flt);
+    }
 
     public Profissional salvar(Profissional profissional) {
         // Validação: verificar se email já existe (se informado)
